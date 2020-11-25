@@ -305,21 +305,30 @@ function addEmployee() {
             }
           }
 
-          db.query(
-            "INSERT INTO employee SET ?",
-            {
-              first_name: answer.first_name,
-              last_name: answer.last_name,
-              role_id: role_id,
-            },
-            function (err) {
-              if (err) throw err;
+          inquirer.prompt( [
+            { message: "What is your first name?", name: "first_name" },
+            { message: "What is your last name?", name: "last_name" }
+          ]).then(function(useranswer){
+             console.log(useranswer);
+             db.query(
+              "INSERT INTO employee SET ?",
+              {
+                first_name: useranswer.first_name,
+                last_name: useranswer.last_name,
+                role_id,
+              },
+              function (err) {
+                if (err) throw err;
+  
+                console.log(`You have created an employee ${useranswer.first_name} ${useranswer.last_name} with a role of ${role_id}.`)
+  
+                questions();
+              }
+            );
 
-              console.log(`You have created an employee ${answer.first_name} ${answer.last_name} with a role of ${role_id}.`)
+           } )
 
-              questions();
-            }
-          );
+          
         });
     }
   );
